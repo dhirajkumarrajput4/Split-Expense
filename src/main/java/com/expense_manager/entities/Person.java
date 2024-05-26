@@ -2,11 +2,19 @@ package com.expense_manager.entities;
 
 import com.expense_manager.comman.Entity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @jakarta.persistence.Entity
 @Table(name = "person")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Person extends Entity {
     @Column(name = "firstName")
     private String firstName;

@@ -3,11 +3,19 @@ package com.expense_manager.entities;
 import com.expense_manager.comman.Entity;
 import com.expense_manager.comman.MoneyAttributeConverter;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 import org.joda.money.Money;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @jakarta.persistence.Entity
 @Table(name = "expense")
 public class Expense extends Entity {
@@ -35,6 +43,6 @@ public class Expense extends Entity {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToMany(mappedBy = "expense",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<ExpenseShare> expenseShares;
 }
