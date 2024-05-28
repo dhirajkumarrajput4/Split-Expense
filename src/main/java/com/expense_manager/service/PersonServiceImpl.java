@@ -16,4 +16,19 @@ public class PersonServiceImpl implements PersonService {
     public Optional<Person> findByPhone(String phone) {
         return personRepo.findByMobileNumber(phone);
     }
+
+    @Override
+    public void savePerson(Person person) {
+        personRepo.save(person);
+    }
+
+    @Override
+    public void deletePerson(Person person) {
+        personRepo.delete(person);
+    }
+
+    @Override
+    public Optional<Person> findById(Long id) {
+        return personRepo.findById(id);
+    }
 }

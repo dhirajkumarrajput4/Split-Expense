@@ -31,7 +31,7 @@ public class Person extends Entity {
     @ManyToMany(mappedBy = "members")
     private List<Group> groups;
 
-    @OneToMany(mappedBy = "createdBy",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Group> createdGroups;
 
     @OneToMany(mappedBy = "createBy", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -43,4 +43,10 @@ public class Person extends Entity {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
     private List<Share> shares;
 
+    public Person(String firstName, String lastName, String emailId, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailId = emailId;
+        this.mobileNumber = phoneNumber;
+    }
 }

@@ -18,26 +18,11 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user")
 public class Controller {
-    @Autowired
-    private OtpService otpService;
 
     @Autowired
     private PersonService personService;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String phone, @RequestParam Integer otp) {
-        Person person = personService.findByPhone(phone).orElse(null);
-        Optional<Otp> otpEntity =otpService.findByPersonAndOtp(person,otp);
-
-        if (!otpEntity.isEmpty() && otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
-            // If OTP is valid and not expired, generate JWT token
-            String token = JwtAuthenticationFilter.generateToken(person);
-            return ResponseEntity.ok(token);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP");
-        }
-    }
 
 }
