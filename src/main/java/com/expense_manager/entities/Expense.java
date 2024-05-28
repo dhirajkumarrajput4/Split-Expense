@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 import org.joda.money.Money;
 
 import java.util.List;
@@ -44,5 +43,5 @@ public class Expense extends Entity {
     private Group group;
 
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
-    private List<ExpenseShare> expenseShares;
+    private List<Share> shares;
 }

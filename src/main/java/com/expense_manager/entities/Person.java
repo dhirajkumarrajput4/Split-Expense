@@ -41,10 +41,6 @@ public class Person extends Entity {
     private List<Expense> paidExpenses;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-    private List<ExpenseShare> expenseShares;
-
-
-
-
+    private List<Share> shares;
 
 }

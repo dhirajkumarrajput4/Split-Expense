@@ -10,12 +10,12 @@ import lombok.Setter;
 import org.joda.money.Money;
 
 @jakarta.persistence.Entity
-@Table(name = "expenseShare")
+@Table(name = "share")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class ExpenseShare extends Entity {
+public class Share extends Entity {
 
     @ManyToOne
     @JoinColumn(name = "expense_id")

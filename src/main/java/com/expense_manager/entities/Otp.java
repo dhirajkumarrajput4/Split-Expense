@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Otp extends Entity {
-
     @ManyToOne
     @JoinColumn(name = "personId")
     private Person person;
