@@ -28,14 +28,11 @@ public class Person extends Entity {
     @Column(name = "mobileNumber")
     private String mobileNumber;
 
-    @Column(name = "otp_id")
-    private Otp otp;
-
     @ManyToMany(mappedBy = "members")
     private List<Group> groups;
 
-    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL)
-    private List<Group> createdBy;
+    @OneToMany(mappedBy = "createdBy",cascade = CascadeType.ALL)
+    private List<Group> createdGroups;
 
     @OneToMany(mappedBy = "createBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> createdExpenses;

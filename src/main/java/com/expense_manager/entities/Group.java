@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.List;
 
 @jakarta.persistence.Entity
-@Table(name = "group")
+@Table(name = "expense_group") // Escaping the table name
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,14 +24,14 @@ public class Group extends Entity {
     @JoinColumn(name = "creator_id")
     private Person createdBy;
 
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<Expense> expenses;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "group_members",
             joinColumns = @JoinColumn(name = "group_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            inverseJoinColumns = @JoinColumn(name = "person_id")
     )
     private List<Person> members;
 }
