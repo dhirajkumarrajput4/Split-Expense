@@ -1,6 +1,7 @@
 package com.expense_manager.controller;
 
 import com.expense_manager.comman.Mail;
+import com.expense_manager.dtos.JwtResponse;
 import com.expense_manager.dtos.User;
 import com.expense_manager.entities.Otp;
 import com.expense_manager.entities.Person;
@@ -19,6 +20,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -53,6 +55,9 @@ public class LoginController {
     @Autowired
     private AuthenticationManager manager;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @GetMapping("helloWorld")
@@ -70,6 +75,8 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is already exist");
         }
         Person newPerson = new Person(user.getFirstName(), user.getLastName(), user.getEmailId(), user.getPhoneNumber());
+        newPerson.setRole("USER");
+        newPerson.setPassword(passwordEncoder.encode("091234"));
         personService.savePerson(newPerson);
         Mail mail = successfullyRegistrationMailBody(user.getEmailId());
         mailService.sendEmail(mail);
@@ -101,7 +108,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String phoneEmail, @RequestParam Integer otp) {
+    public ResponseEntity<JwtResponse> login(@RequestParam String phoneEmail, @RequestParam Integer otp) {
         Person person = null;
         if (phoneEmail.contains("@")) {
             person = personService.findByEmailId(phoneEmail).orElse(null);
@@ -109,14 +116,14 @@ public class LoginController {
             person = personService.findByPhone(phoneEmail).orElse(null);
         }
         if (person == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is not registered !");
+            throw new BadCredentialsException(" Invalid Username or OTP  !!");
         }
 
         Optional<Otp> otpEntity = otpService.findByPersonAndOtp(person, otp);
         if (!otpEntity.isEmpty() && otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
                 doAuthenticate(phoneEmail);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP");
+            throw new BadCredentialsException(" Invalid OTP  !!");
         }
         UserDetails userDetails = null;
         if (phoneEmail.contains("@")) {
@@ -128,9 +135,12 @@ public class LoginController {
         if (!otpEntity.isEmpty() && otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
             // If OTP is valid and not expired, generate JWT token
             String token = this.jwtHelper.generateToken(userDetails);
-            return ResponseEntity.ok(token);
+            JwtResponse response = JwtResponse.builder()
+                    .jwtToken(token)
+                    .username(userDetails.getUsername()).build();
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid OTP");
+            throw new BadCredentialsException("OTP invalid or expired");
         }
     }
 
@@ -175,7 +185,7 @@ public class LoginController {
     }
 
     private void doAuthenticate(String email) {
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, "");
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, "091234");
         try {
             manager.authenticate(authentication);
         } catch (BadCredentialsException e) {

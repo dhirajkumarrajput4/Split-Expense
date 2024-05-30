@@ -27,7 +27,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (person == null){
             throw new UsernameNotFoundException("Could not found user !!");
         }
-      return new User(person.getEmailId(), "", new ArrayList<>());
-//        return new CustomUserDetails(person);
+//      return new User(person.getEmailId(), "", new ArrayList<>());
+        return new CustomUserDetails(person);
     }
 }

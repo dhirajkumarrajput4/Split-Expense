@@ -13,8 +13,8 @@ import java.util.List;
 @Table(name = "person")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 public class Person extends Entity {
     @Column(name = "firstName")
     private String firstName;
@@ -30,6 +30,9 @@ public class Person extends Entity {
 
     @Column(name = "role")
     private String role;
+
+    @Column(name = "password")
+    private String password;
 
     @ManyToMany(mappedBy = "members")
     private List<Group> groups;
@@ -52,4 +55,5 @@ public class Person extends Entity {
         this.emailId = emailId;
         this.mobileNumber = phoneNumber;
     }
+
 }
