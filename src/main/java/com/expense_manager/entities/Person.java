@@ -28,6 +28,9 @@ public class Person extends Entity {
     @Column(name = "mobileNumber")
     private String mobileNumber;
 
+    @Column(name = "role")
+    private String role;
+
     @ManyToMany(mappedBy = "members")
     private List<Group> groups;
 

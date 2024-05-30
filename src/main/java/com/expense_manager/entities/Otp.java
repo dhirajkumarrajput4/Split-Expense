@@ -5,12 +5,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @jakarta.persistence.Entity
 @Table(name = "otp")
@@ -28,5 +31,14 @@ public class Otp extends Entity {
 
     @Column(nullable = false)
     private LocalDateTime expiration;
+
+    public Otp(Person person, Integer otp){
+        this.person = person;
+        this.otp = otp;
+    }
+
+    public void expireAfter(int duration, ChronoUnit chronoUnit) {
+        expiration = LocalDateTime.now().plus(Duration.of(duration, chronoUnit));
+    }
 
 }

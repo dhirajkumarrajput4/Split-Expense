@@ -18,6 +18,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Optional<Person> findByEmailId(String email) {
+        return personRepo.findByEmailId(email);
+    }
+
+    @Override
     public void savePerson(Person person) {
         personRepo.save(person);
     }
