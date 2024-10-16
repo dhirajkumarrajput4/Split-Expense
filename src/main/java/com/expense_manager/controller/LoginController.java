@@ -120,8 +120,8 @@ public class LoginController {
         }
 
         Optional<Otp> otpEntity = otpService.findByPersonAndOtp(person, otp);
-        if (!otpEntity.isEmpty() && otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
-                doAuthenticate(phoneEmail);
+        if (otpEntity.isPresent() && otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
+            doAuthenticate(phoneEmail);
         } else {
             throw new BadCredentialsException(" Invalid OTP  !!");
         }
@@ -132,7 +132,7 @@ public class LoginController {
             userDetails = userDetailsService.loadUserByUsername(phoneEmail);
         }
 
-        if (!otpEntity.isEmpty() && otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
+        if (otpEntity.get().getExpiration().isAfter(LocalDateTime.now())) {
             // If OTP is valid and not expired, generate JWT token
             String token = this.jwtHelper.generateToken(userDetails);
             JwtResponse response = JwtResponse.builder()

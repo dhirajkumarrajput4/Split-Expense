@@ -5,6 +5,7 @@ import com.expense_manager.repository.PersonRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,5 +36,10 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Optional<Person> findById(Long id) {
         return personRepo.findById(id);
+    }
+
+    @Override
+    public List<Person> findAll() {
+        return personRepo.findAll();
     }
 }

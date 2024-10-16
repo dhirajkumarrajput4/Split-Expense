@@ -1,6 +1,7 @@
 package com.expense_manager.entities;
 
 import com.expense_manager.comman.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,24 +30,31 @@ public class Person extends Entity {
     private String mobileNumber;
 
     @Column(name = "role")
+    @JsonIgnore
     private String role;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @ManyToMany(mappedBy = "members")
+    @JsonIgnore
     private List<Group> groups;
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Group> createdGroups;
 
     @OneToMany(mappedBy = "createBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Expense> createdExpenses;
 
     @OneToMany(mappedBy = "paidBy", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Expense> paidExpenses;
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Share> shares;
 
     public Person(String firstName, String lastName, String emailId, String phoneNumber) {
