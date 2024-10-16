@@ -5,7 +5,6 @@ import com.expense_manager.dtos.JwtResponse;
 import com.expense_manager.dtos.User;
 import com.expense_manager.entities.Otp;
 import com.expense_manager.entities.Person;
-import com.expense_manager.security.JwtAuthenticationFilter;
 import com.expense_manager.security.JwtHelper;
 import com.expense_manager.service.OtpService;
 import com.expense_manager.service.PersonService;

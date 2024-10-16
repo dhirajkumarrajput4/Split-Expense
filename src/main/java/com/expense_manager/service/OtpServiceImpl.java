@@ -4,7 +4,6 @@ import com.expense_manager.entities.Otp;
 import com.expense_manager.entities.Person;
 import com.expense_manager.repository.OtpRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

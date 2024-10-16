@@ -1,19 +1,12 @@
 package com.expense_manager.controller;
 
-import com.expense_manager.entities.Otp;
 import com.expense_manager.entities.Person;
-import com.expense_manager.repository.OtpRepo;
-import com.expense_manager.security.JwtAuthenticationFilter;
-import com.expense_manager.service.OtpService;
 import com.expense_manager.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
