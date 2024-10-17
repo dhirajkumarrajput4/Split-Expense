@@ -1,6 +1,8 @@
 package com.expense_manager.entities;
 
 import com.expense_manager.comman.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +27,7 @@ public class Group extends Entity {
     private Person createdBy;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Expense> expenses;
 
     @ManyToMany(cascade = CascadeType.ALL)

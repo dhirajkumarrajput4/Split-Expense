@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.ArrayList;
 
+import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import com.expense_manager.entities.Person;
 import com.expense_manager.entities.Share;
 import com.expense_manager.repository.ExpensesRepoes.ExpenseRepo;
 import com.expense_manager.service.PersonService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -30,28 +33,36 @@ public class ExpenseServiceImpl implements ExpenseService {
     private PersonService personService;
 
     @Override
+    @Transactional
     public Expense createExpense(ExpenseDto expenseDto, Group group) {
-
         if (expenseDto.isEqualyShared()) {
             Integer membersCount = group.getMembers().size();
 
-            Money perPersonAmount = expenseDto.getAmount().dividedBy(membersCount, RoundingMode.HALF_EVEN);
+            double dividedAmount = expenseDto.getAmount() / membersCount;
 
+            Money perPersonAmount = Money.of(CurrencyUnit.of("INR"), dividedAmount);
+
+            Money totalPaidAmount = Money.of(CurrencyUnit.of("INR"), expenseDto.getAmount());
+
+            // Money perPersonAmount = expenseDto.getAmount().dividedBy(membersCount,
+            // RoundingMode.HALF_EVEN);.
+
+            Expense expense = new Expense();
+            expense.setAmount(totalPaidAmount);
+            expense.setDescription(expenseDto.getDescription());
+            expense.setExpenseCategory(expenseDto.getExpenseCategory());
+            expense.setPaidBy(expenseDto.getPaidBy());
+            expense.setCreateBy(expenseDto.getCreateBy());
+            expense.setGroup(group);
             List<Share> shares = new ArrayList<>();
             for (Person member : group.getMembers()) {
                 Share share = new Share();
                 share.setSharedAmount(perPersonAmount);
                 share.setPerson(member);
+                share.setExpense(expense);
                 shares.add(share);
             }
-
-            Expense expense = new Expense();
-            expense.setAmount(expenseDto.getAmount());
-            expense.setDescription(expenseDto.getDescription());
-            expense.setExpenseCategory(expenseDto.getExpenseCategory());
             expense.setShares(shares);
-            expense.setGroup(group);
-
             return expenseRepo.save(expense);
         }
         // return expenseRepo.save(expense);

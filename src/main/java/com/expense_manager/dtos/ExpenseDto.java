@@ -24,9 +24,9 @@ public class ExpenseDto {
 
     private Long groupId;
 
-    private Money amount;
+    private double amount;
 
-    private Money sharedAmount;
+    private double sharedAmount;
 
     private boolean equalyShared;
 

@@ -2,6 +2,8 @@ package com.expense_manager.entities;
 
 import com.expense_manager.comman.Entity;
 import com.expense_manager.comman.MoneyAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import org.joda.money.Money;
 public class Share extends Entity {
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "expense_id")
     private Expense expense;
 

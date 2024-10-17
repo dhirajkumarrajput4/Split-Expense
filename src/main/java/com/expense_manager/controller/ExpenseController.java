@@ -33,6 +33,7 @@ public class ExpenseController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createExpense(@RequestBody ExpenseDto expenseDto, Principal principal) {
+        
         Optional<Person> person = personService.findByEmailId(principal.getName());
         expenseDto.setCreateBy(person.get());
         expenseDto.setPaidBy(person.get());
