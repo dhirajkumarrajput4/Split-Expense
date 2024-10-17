@@ -101,6 +101,7 @@ public class GroupController {
             this.groupService.addMember(groupOptional.get(), addMemberResonse);
             return new ResponseEntity<>("Meber added successfully", HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("something went wrong...." + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

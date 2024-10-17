@@ -13,6 +13,8 @@ import com.expense_manager.repository.ExpensesRepoes.GroupRepo;
 import com.expense_manager.resonses.AddMemberResonse;
 import com.expense_manager.service.PersonService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class GroupServiceImpl implements GroupService {
 
@@ -56,6 +58,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional
     public Group addMember(Group group, AddMemberResonse addMemberResonse) {
 
         Person newMember = this.personService.findByEmailId(addMemberResonse.getEmailId())
@@ -67,7 +70,8 @@ public class GroupServiceImpl implements GroupService {
                     return newPerson;
                 });
 
-        group.setMembers(Arrays.asList(newMember));
+        group.getMembers().add(newMember);
+        groupRepo.save(group);
         return group;
     }
 
