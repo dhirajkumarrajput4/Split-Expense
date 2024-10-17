@@ -1,15 +1,16 @@
 package com.expense_manager.service.ExpenseServices;
 
 import java.util.List;
-import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.ArrayList;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.expense_manager.comman.Job;
 import com.expense_manager.dtos.ExpenseDto;
 import com.expense_manager.entities.Expense;
 import com.expense_manager.entities.Group;
@@ -17,6 +18,8 @@ import com.expense_manager.entities.Person;
 import com.expense_manager.entities.Share;
 import com.expense_manager.repository.ExpensesRepoes.ExpenseRepo;
 import com.expense_manager.service.PersonService;
+import com.expense_manager.service.AmqpServices.MessageConsumer;
+import com.expense_manager.service.AmqpServices.MessageProducer;
 
 import jakarta.transaction.Transactional;
 
@@ -27,11 +30,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     private ExpenseRepo expenseRepo;
 
     @Autowired
-    private GroupService groupService;
+    private MessageConsumer messageConsumer;
 
     @Autowired
-    private PersonService personService;
+    private MessageProducer messageProducer;
 
+    
     @Override
     @Transactional
     public Expense createExpense(ExpenseDto expenseDto, Group group) {
@@ -63,10 +67,24 @@ public class ExpenseServiceImpl implements ExpenseService {
                 shares.add(share);
             }
             expense.setShares(shares);
-            return expenseRepo.save(expense);
+            expenseRepo.save(expense);
+
+            sendEmailNotificationToGroupMembersJob(expense);
+            return expense;
         }
         // return expenseRepo.save(expense);
         return null;
+    }
+
+    private void sendEmailNotificationToGroupMembersJob(Expense expense) {
+        Job job =new Job("sendMail");
+        job.put("expenseId", expense.getId());
+        this.messageProducer.sendMessage(job);
+    }
+
+
+    public void  sendEmailNotificationToGroupMembersJ(Expense expense){
+        
     }
 
     @Override

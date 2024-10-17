@@ -48,6 +48,7 @@ public class ExpenseController {
             Expense expense = this.expenseService.createExpense(expenseDto, grouOptional.get());
             return new ResponseEntity<>(expense, HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>("Something went wrong...", HttpStatus.BAD_REQUEST);
         }
     }
