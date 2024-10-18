@@ -15,7 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
+
 
 import java.io.File;
 import java.util.List;

@@ -16,12 +16,20 @@ public class Job implements Serializable {
     private static final long serialVersionUID = 1L;
     private String name;
     private String user;
+    private String lockKey;
+
     private Map<String, Object> attributes = new LinkedHashMap<>();
 
-    public Job(String name) {
+    public Job(String name, String lockKey) {
         this.name = name;
+        this.lockKey = lockKey;
     }
 
+
+    public String getLockKey() {
+        return lockKey;
+    }
+    
     public void put(String key, Long value) {
         attributes.put(key, value);
     }
@@ -42,4 +50,6 @@ public class Job implements Serializable {
         // return (Long) get(key);
          return Long.parseLong(get(key).toString());
      }
+
+
 }

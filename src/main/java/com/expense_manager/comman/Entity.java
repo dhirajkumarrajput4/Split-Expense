@@ -41,4 +41,12 @@ public class Entity implements IdProvider {
     public OffsetDateTime getModified() {
         return modified;
     }
+
+    public String getTag() {
+        return getClass().getSimpleName() + "-" + getId();
+    }
+
+    public String getLockKey() {
+        return getClass().getName() + "-" + getId();
+    }
 }
