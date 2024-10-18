@@ -30,7 +30,7 @@ public class Group extends Entity {
     @JsonIgnore
     private List<Expense> expenses;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinTable(
             name = "group_members",
             joinColumns = @JoinColumn(name = "group_id"),

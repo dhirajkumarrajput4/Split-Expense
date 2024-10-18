@@ -42,6 +42,6 @@ public class Expense extends Entity {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Share> shares;
 }

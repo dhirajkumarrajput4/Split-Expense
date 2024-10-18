@@ -6,20 +6,19 @@ import java.util.ArrayList;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.expense_manager.comman.Job;
+import com.expense_manager.comman.Mail;
 import com.expense_manager.dtos.ExpenseDto;
 import com.expense_manager.entities.Expense;
 import com.expense_manager.entities.Group;
 import com.expense_manager.entities.Person;
 import com.expense_manager.entities.Share;
 import com.expense_manager.repository.ExpensesRepoes.ExpenseRepo;
-import com.expense_manager.service.PersonService;
-import com.expense_manager.service.AmqpServices.MessageConsumer;
 import com.expense_manager.service.AmqpServices.MessageProducer;
+import com.expense_manager.service.email.MailService;
 
 import jakarta.transaction.Transactional;
 
@@ -30,12 +29,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     private ExpenseRepo expenseRepo;
 
     @Autowired
-    private MessageConsumer messageConsumer;
-
-    @Autowired
     private MessageProducer messageProducer;
 
-    
+    @Autowired
+    private MailService mailService;
+
     @Override
     @Transactional
     public Expense createExpense(ExpenseDto expenseDto, Group group) {
@@ -77,14 +75,24 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     private void sendEmailNotificationToGroupMembersJob(Expense expense) {
-        Job job =new Job("sendMail");
+        Job job = new Job("sendMail");
         job.put("expenseId", expense.getId());
         this.messageProducer.sendMessage(job);
     }
 
+    @Transactional
+    public void sendEmailNotificationToGroupMembers(Expense expense) {
+        for (Person person : expense.getGroup().getMembers()) {
+            // if(person.equals(expense.getCreateBy())) {
+            sendEmailNotification(expense, person);
+            // }
 
-    public void  sendEmailNotificationToGroupMembersJ(Expense expense){
-        
+        }
+    }
+
+    public void sendEmailNotification(Expense expense, Person person) {
+        Mail mail = this.mailService.createEmailForExpenseNotification(expense, person);
+        this.mailService.sendEmail(mail);
     }
 
     @Override

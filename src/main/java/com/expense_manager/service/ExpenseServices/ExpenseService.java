@@ -17,4 +17,6 @@ public interface ExpenseService {
     Optional<Expense> findExpenseById(Long id);
 
     List<Expense> findExpensesByUser(Person person);
+
+    void sendEmailNotificationToGroupMembers(Expense expense);
 }
