@@ -12,4 +12,7 @@ import com.expense_manager.entities.Person;
 public interface ExpenseRepo extends JpaRepository<Expense,Long>{
     
     List<Expense> findByPaidBy(Person person);
+
+
+    
 }

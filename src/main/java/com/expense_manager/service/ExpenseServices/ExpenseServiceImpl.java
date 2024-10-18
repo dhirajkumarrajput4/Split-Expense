@@ -17,6 +17,7 @@ import com.expense_manager.entities.Group;
 import com.expense_manager.entities.Person;
 import com.expense_manager.entities.Share;
 import com.expense_manager.repository.ExpensesRepoes.ExpenseRepo;
+import com.expense_manager.resonses.UserExpenseDetails;
 import com.expense_manager.service.AmqpServices.MessageProducer;
 import com.expense_manager.service.email.MailService;
 
@@ -108,6 +109,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<Expense> findExpensesByUser(Person person) {
         return expenseRepo.findByPaidBy(person);
+    }
+
+    @Override
+    public UserExpenseDetails fetchCalculatedExpense(Person person) {
+        
+
+        return null;
     }
 
 }
