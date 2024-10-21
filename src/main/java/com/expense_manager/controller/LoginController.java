@@ -8,6 +8,7 @@ import com.expense_manager.entities.Person;
 import com.expense_manager.security.JwtHelper;
 import com.expense_manager.service.OtpService;
 import com.expense_manager.service.PersonService;
+import com.expense_manager.service.ExpenseServices.LogInService;
 import com.expense_manager.service.email.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public class LoginController {
     private AuthenticationManager manager;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private LogInService logInService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
@@ -73,12 +74,7 @@ public class LoginController {
         if (person.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is already exist");
         }
-        Person newPerson = new Person(user.getFirstName(), user.getLastName(), user.getEmailId(), user.getPhoneNumber());
-        newPerson.setRole("USER");
-        newPerson.setPassword(passwordEncoder.encode("091234"));
-        personService.savePerson(newPerson);
-        Mail mail = successfullyRegistrationMailBody(user.getEmailId());
-        mailService.sendEmail(mail);
+        Person newPerson=logInService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("User register successfully");
     }
 
@@ -168,20 +164,7 @@ public class LoginController {
         return mail;
     }
 
-    private Mail successfullyRegistrationMailBody(String email) {
-        //for send mail
-        Mail mail = new Mail();
-        mail.setMailTo(email);
-        mail.setMailSubject("Welcome Split-Expense");
-        //mail content
-        Context context = new Context();
-        context.setVariable("title", "Welcome to Split-Expense");
-        context.setVariable("message", "You are successfully register with username " + email);
 
-        String htmlContent = templateEngine.process("email/email-template", context);
-        mail.setMailContent(htmlContent);
-        return mail;
-    }
 
     private void doAuthenticate(String email) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, "091234");

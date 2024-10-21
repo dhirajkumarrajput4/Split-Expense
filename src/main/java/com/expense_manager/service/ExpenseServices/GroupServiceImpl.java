@@ -7,11 +7,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.expense_manager.dtos.GroupDto;
+import com.expense_manager.comman.Mail;
 import com.expense_manager.entities.Group;
 import com.expense_manager.entities.Person;
 import com.expense_manager.repository.ExpensesRepoes.GroupRepo;
 import com.expense_manager.resonses.AddMemberResonse;
 import com.expense_manager.service.PersonService;
+import com.expense_manager.service.email.MailService;
 
 import jakarta.transaction.Transactional;
 
@@ -26,6 +28,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private LogInService logInService;
+
+    @Autowired
+    private MailService mailService;
+
 
     @Override
     public Optional<Group> findGroupById(Long idLong) {
@@ -72,6 +81,9 @@ public class GroupServiceImpl implements GroupService {
 
         group.getMembers().add(newMember);
         groupRepo.save(group);
+        Mail email=logInService.successfullyRegistrationMailBody(newMember.getEmailId());
+        mailService.sendEmail(email);
+        
         return group;
     }
 

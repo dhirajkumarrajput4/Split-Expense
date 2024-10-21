@@ -7,7 +7,8 @@ import com.expense_manager.dtos.ExpenseDto;
 import com.expense_manager.entities.Expense;
 import com.expense_manager.entities.Group;
 import com.expense_manager.entities.Person;
-import com.expense_manager.resonses.UserExpenseDetails;
+import com.expense_manager.resonses.ExpenseResponse;
+
 
 public interface ExpenseService {
 
@@ -21,5 +22,9 @@ public interface ExpenseService {
 
     void sendEmailNotificationToGroupMembers(Expense expense);
 
-    public UserExpenseDetails fetchCalculatedExpense(Person person);
+    // public UserExpenseDetails fetchCalculatedExpense(Person person);
+    
+    List<ExpenseResponse> fetchExpeseWithDetails(Group group, Person person);
+
+    List<Expense> findGroupExpense(Group group);
 }
