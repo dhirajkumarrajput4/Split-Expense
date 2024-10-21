@@ -82,7 +82,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     private void sendEmailNotificationToGroupMembersJob(Expense expense) {
-        Job job = new Job("sendMail", expense.getLockKey());
+        Job job = new Job("ExpenseNotificationJob", expense.getLockKey());
         job.put("expenseId", expense.getId());
         this.messageProducer.sendMessage(job);
     }
