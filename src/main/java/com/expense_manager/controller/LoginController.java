@@ -20,7 +20,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -74,7 +73,7 @@ public class LoginController {
         if (person.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User is already exist");
         }
-        Person newPerson=logInService.createUser(user);
+        Person newPerson = logInService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body("User register successfully");
     }
 
@@ -93,7 +92,7 @@ public class LoginController {
         Otp otpEntity = new Otp(person, otp);
         otpEntity.expireAfter(60, ChronoUnit.HOURS);
         otpService.save(otpEntity);
-        //Generate mail with html body
+        // Generate mail with html body
         LOGGER.info("OTP: " + otp);
         if (phoneEmail.contains("@")) {
             Mail mail = generateMailWithBody(otp, person.getEmailId());
@@ -139,6 +138,18 @@ public class LoginController {
         }
     }
 
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<?> updateUserDetails(@RequestBody User user, @PathVariable("userId") Long userId) {
+
+        if (!validateUser(user)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("First name and phone number can't be empty");
+        }
+        Optional<Person> person = personService.findById(userId);
+
+        this.personService.updateUser(user, person.get());
+
+        return new ResponseEntity<>("User update successfullly", HttpStatus.OK);
+    }
 
     private boolean validateUser(User user) {
         return user.getFirstName() != null && user.getPhoneNumber() != null;
@@ -148,13 +159,12 @@ public class LoginController {
         return new Random().nextInt(900000) + 100000;
     }
 
-
     private Mail generateMailWithBody(Integer otp, String email) {
-        //for send mail
+        // for send mail
         Mail mail = new Mail();
         mail.setMailTo(email);
         mail.setMailSubject("Split-Expense OTP");
-        //mail content
+        // mail content
         Context context = new Context();
         context.setVariable("title", "Welcome to Split-Expense");
         context.setVariable("message", "Your OTP is : " + otp);
@@ -163,8 +173,6 @@ public class LoginController {
         mail.setMailContent(htmlContent);
         return mail;
     }
-
-
 
     private void doAuthenticate(String email) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, "091234");

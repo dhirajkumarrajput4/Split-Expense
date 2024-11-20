@@ -1,5 +1,6 @@
 package com.expense_manager.service;
 
+import com.expense_manager.dtos.User;
 import com.expense_manager.entities.Person;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface PersonService {
     void deletePerson(Person person);
     Optional<Person> findById(Long id);
     List<Person> findAll();
+    void updateUser(User user,Person person);
 }
